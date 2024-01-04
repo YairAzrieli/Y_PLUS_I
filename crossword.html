@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Magical Journey</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://i.insider.com/6095776034af8d001859c0f2?width=1000&format=jpeg&auto=webp') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+        display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+
+    .crossword-puzzle {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+      margin-top: 20px;
+    }
+
+    .cell {
+      width: 40px;
+      height: 40px;
+      background-color: #fff;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      border: none;
+      outline: none;
+      font-weight: bold;
+      background-color: transparent;
+      color: #333;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+     nav {
+      background-color: #6D0805;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Crossword Puzzle</h1>
+  </header>
+  
+    <nav>
+    <a href="#home">back</a>
+    
+  </nav>
+  
+  <p> THE CLUE IS: he is seeking fast </p>
+
+  <div class="crossword-puzzle">
+    <div class="cell" data-answer="H"><input type="text" maxlength="1"></div>
+    <div class="cell" data-answer="A"><input type="text" maxlength="1"></div>
+    <div class="cell" data-answer="R"><input type="text" maxlength="1"></div>
+    <div class="cell" data-answer="R"><input type="text" maxlength="1"></div>
+    <div class="cell" data-answer="Y"><input type="text" maxlength="1"></div>
+  </div>
+
+  <form>
+    <label for="answer">Submit Your Answer:</label>
+    <input type="text" id="answer" maxlength="5">
+    <button type="button" onclick="checkAnswer()">Submit</button>
+  </form>
+
+  <p> </p>
+  
+  <p id="result"></p>
+
+  <script>
+    function checkAnswer() {
+      const userAnswer = document.getElementById('answer').value.toUpperCase();
+      const cells = document.querySelectorAll('.cell');
+      let correct = true;
+
+      cells.forEach((cell, index) => {
+        const cellAnswer = cell.getAttribute('data-answer');
+        const userInput = cell.querySelector('input').value.toUpperCase();
+        if (cellAnswer !== userInput) {
+          correct = false;
+          cell.classList.add('incorrect');
+        }
+      });
+
+      if (correct) {
+        document.getElementById('result').textContent = 'Congratulations! You solved the puzzle!';
+      } else {
+        document.getElementById('result').textContent = 'Oops! Try again.';
+      }
+    }
+  </script>
+
+</body>
+</html>
