@@ -1,0 +1,184 @@
+<!-- puzzle_page.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magical Puzzle</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://i.pinimg.com/736x/30/71/2b/30712b4bc8832d63e65d8f2734dc077c.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    #puzzle-container {
+      position: relative;
+      width: 400px;
+      height: 300px;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+
+    .puzzle-piece {
+      position: absolute;
+      cursor: grab;
+      background-repeat: no-repeat;
+    }
+
+   nav {
+      background-color: #6D0805;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+
+
+    nav a:hover,
+    header a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html">Welcome to Our Magical Journey</a>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#memories">Memories</a>
+    <a href="#adventures">Adventures</a>
+    <a href="#future">Future</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="wizard_section.html">Wizard Houses</a>
+    <a href="puzzle_page.html">Magical Puzzle</a>
+  </nav>
+
+  <section>
+    <h2>Magical Puzzle</h2>
+    <div id="puzzle-container"></div>
+  </section>
+
+<script>
+  var pieces = 9;
+  var pieceSize = 100;
+  var puzzleContainer = document.getElementById('puzzle-container');
+  var emptyPiece = { top: 0, left: 0 };
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function createPuzzle() {
+    puzzleContainer.innerHTML = '';
+    var shuffledPieces = shuffle([...Array(pieces).keys()]);
+
+    for (let i = 0; i < pieces; i++) {
+      var piece = document.createElement('div');
+      piece.classList.add('puzzle-piece');
+      piece.style.width = pieceSize + 'px';
+      piece.style.height = pieceSize + 'px';
+      piece.style.backgroundImage = 'url("https://i.pinimg.com/236x/51/b5/7f/51b57f875e8b8ed996ff72ee6dc7f764.jpg")';
+      piece.style.backgroundSize = (pieceSize * pieces) + 'px ' + pieceSize + 'px';
+      piece.style.backgroundPosition = -pieceSize * shuffledPieces[i] + 'px 0';
+      piece.style.top = Math.floor(i / Math.sqrt(pieces)) * pieceSize + 'px';
+      piece.style.left = (i % Math.sqrt(pieces)) * pieceSize + 'px';
+      piece.setAttribute('draggable', 'true');
+
+      piece.addEventListener('dragstart', function (e) {
+        e.dataTransfer.setData('text/plain', i);
+      });
+
+      piece.addEventListener('dragover', function (e) {
+        e.preventDefault();
+      });
+
+      piece.addEventListener('drop', function (e) {
+        e.preventDefault();
+        var draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+        var draggedPiece = document.querySelector('.puzzle-piece:nth-child(' + (draggedIndex + 1) + ')');
+        var targetPiece = e.target;
+
+        if (targetPiece !== null && targetPiece !== draggedPiece) {
+          swapPieces(draggedPiece, targetPiece);
+          checkWin();
+        }
+      });
+
+      puzzleContainer.appendChild(piece);
+    }
+
+    emptyPiece = { top: Math.floor(pieces / Math.sqrt(pieces)) * pieceSize, left: (pieces % Math.sqrt(pieces)) * pieceSize };
+
+    puzzleContainer.style.width = Math.sqrt(pieces) * pieceSize + 'px';
+    puzzleContainer.style.height = Math.floor(pieces / Math.sqrt(pieces)) * pieceSize + 'px';
+  }
+
+  function swapPieces(piece1, piece2) {
+    var tempTop = piece1.style.top;
+    var tempLeft = piece1.style.left;
+    piece1.style.top = piece2.style.top;
+    piece1.style.left = piece2.style.left;
+    piece2.style.top = tempTop;
+    piece2.style.left = tempLeft;
+  }
+
+  function checkWin() {
+    var piecesInOrder = true;
+
+    for (let i = 0; i < pieces; i++) {
+      var piece = puzzleContainer.children[i];
+      var correctTop = Math.floor(i / Math.sqrt(pieces)) * pieceSize;
+      var correctLeft = (i % Math.sqrt(pieces)) * pieceSize;
+
+      if (parseInt(piece.style.top) !== correctTop || parseInt(piece.style.left) !== correctLeft) {
+        piecesInOrder = false;
+        break;
+      }
+    }
+
+    if (piecesInOrder) {
+      alert('Congratulations! You solved the puzzle!');
+      createPuzzle(); // Reset the puzzle after winning
+    }
+  }
+
+  createPuzzle();
+</script>
+
+</body>
+
+</html>
