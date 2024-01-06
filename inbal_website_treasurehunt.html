@@ -1,0 +1,152 @@
+<!-- interactive_map.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treasure Hunt Map</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://t3.ftcdn.net/jpg/03/54/90/84/360_F_354908454_7CftzSVA4ZldS4UrTsBzWLDLRSTyYZWW.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .map-container {
+      position: relative;
+      width: 80%;
+      margin: auto;
+    }
+
+    .map-marker {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #fed136;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .map-marker img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    nav {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a,
+    header a {
+      color: #fed136;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    header a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html">Welcome to Our Magical Journey</a>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#memories">Memories</a>
+    <a href="#adventures">Adventures</a>
+    <a href="#future">Future</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="wizard_section.html">Wizard Houses</a>
+    <a href="interactive_map.html">Treasure Hunt Map</a>
+  </nav>
+
+  <section>
+    <h2>Treasure Hunt Map</h2>
+
+    <div class="timeline-event">
+      <div class="event-date">May 1, 20XX</div>
+      <div class="event-description">
+        <h3>First Meeting</h3>
+        <p>We met for the first time at [Location]. It was a magical encounter that sparked the beginning of our journey together.</p>
+      </div>
+    </div>
+    
+    <div class="map-container">
+      <!-- Marker 1 -->
+      <div class="map-marker" style="top: 30%; left: 40%;">
+        <img src="https://scontent.ftlv5-1.fna.fbcdn.net/v/t1.6435-9/65106437_1168834673323898_7524906642463260672_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=be3454&_nc_ohc=t8mxWLDK3O0AX-6-IC-&_nc_ht=scontent.ftlv5-1.fna&oh=00_AfDBn4SXtaTbCQY2vbbTtap_z4ZDC7vODhG4yPx858W4sA&oe=65BDD9B8" alt="Marker 1">
+      </div>
+
+      <!-- Marker 2 -->
+      <div class="map-marker" style="top: 60%; left: 20%;">
+        <img src="marker2.jpg" alt="Marker 2">
+      </div>
+
+      <!-- Marker 3 -->
+      <div class="map-marker" style="top: 80%; left: 60%;">
+        <img src="marker3.jpg" alt="Marker 3">
+      </div>
+
+      <!-- Marker 4 -->
+      <div class="map-marker" style="top: 50%; left: 80%;">
+        <img src="marker4.jpg" alt="Marker 4">
+      </div>
+      
+      
+         <!-- Marker 4 -->
+      <div class="map-marker" style="top: 50%; left: 80%;">
+        <img src="marker5.jpg" alt="Marker 5">
+      </div>
+      
+      <div class="map-marker" style="top: 20%; left: 70%;">
+        <img src="marker5.jpg" alt="Marker 5">
+      </div>
+
+      <div class="map-marker" style="top: 75%; left: 30%;">
+        <img src="marker6.jpg" alt="Marker 6">
+      </div>
+      <div class="map-marker" style="top: 90%; left: 100%;">
+        <img src="marker5.jpg" alt="Marker 5">
+      </div>
+
+      <div class="map-marker" style="top: 05%; left: 90%;">
+        <img src="marker6.jpg" alt="Marker 6">
+      </div>
+      
+      
+    </div>
+
+    
+  </section>
+
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sliding Puzzle</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    #puzzle-container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-top: 20px;
+    }
+
+    .puzzle-piece {
+      width: 100px;
+      height: 100px;
+      background-color: #fed136;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .empty-piece {
+      background-color: #1a1a1a;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html">Welcome to Our Magical Journey</a>
+  </header>
+
+  <section>
+    <h2>Magical Sliding Puzzle</h2>
+    <div id="puzzle-container"></div>
+    <div id="timer">Time: 0 seconds</div>
+  </section>
+
+  <script>
+    const puzzleContainer = document.getElementById('puzzle-container');
+    const timerElement = document.getElementById('timer');
+    let startTime;
+    let timerInterval;
+
+    function createPuzzle() {
+      let pieces;
+      do {
+        pieces = Array.from({ length: 8 }, (_, index) => index + 1).sort(() => Math.random() - 0.5);
+        pieces.splice(6, 0, null); // Insert null (blank space) at index 6
+      } while (!isSolvable(pieces));
+
+      pieces.forEach((number, index) => {
+        const piece = document.createElement('div');
+        piece.className = `puzzle-piece ${number === null ? 'empty-piece' : ''}`;
+        piece.innerText = number;
+        piece.addEventListener('click', () => movePiece(number, index));
+        puzzleContainer.appendChild(piece);
+      });
+
+      startTimer();
+    }
+
+    function startTimer() {
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      const currentTime = Math.floor((Date.now() - startTime) / 1000);
+      timerElement.innerText = `Time: ${currentTime} second${currentTime === 1 ? '' : 's'}`;
+    }
+
+    function movePiece(number, index) {
+      const emptyIndex = Array.from(puzzleContainer.children).findIndex(piece => piece.innerText === '');
+
+      if (canMove(index, emptyIndex)) {
+        swapPieces(index, emptyIndex);
+        checkWin();
+      }
+    }
+
+    function swapPieces(index1, index2) {
+      const tempText = puzzleContainer.children[index1].innerText;
+      puzzleContainer.children[index1].innerText = puzzleContainer.children[index2].innerText;
+      puzzleContainer.children[index2].innerText = tempText;
+
+      puzzleContainer.children[index1].classList.toggle('empty-piece');
+      puzzleContainer.children[index2].classList.toggle('empty-piece');
+    }
+
+    function canMove(index1, index2) {
+      const row1 = Math.floor(index1 / 3);
+      const col1 = index1 % 3;
+      const row2 = Math.floor(index2 / 3);
+      const col2 = index2 % 3;
+
+      return Math.abs(row1 - row2) + Math.abs(col1 - col2) === 1;
+    }
+
+    function checkWin() {
+      const currentOrder = Array.from(puzzleContainer.children).map(piece => piece.innerText);
+      const correctOrder = Array.from({ length: 8 }, (_, index) => index + 1).map(String);
+      correctOrder.push('');
+
+      if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+        clearInterval(timerInterval);
+        const timeInSeconds = Math.floor((Date.now() - startTime) / 1000);
+        alert(`Congratulations! You solved the puzzle in ${timeInSeconds} second${timeInSeconds === 1 ? '' : 's'}!`);
+        puzzleContainer.innerHTML = '';
+        timerElement.innerText = 'Time: 0 seconds';
+        createPuzzle();
+      }
+    }
+
+    // Function to check if the puzzle is solvable
+    function isSolvable(pieces) {
+      let inversions = 0;
+      for (let i = 0; i < pieces.length - 1; i++) {
+        for (let j = i + 1; j < pieces.length; j++) {
+          if (pieces[i] !== null && pieces[j] !== null && pieces[i] > pieces[j]) {
+            inversions++;
+          }
+        }
+      }
+
+      const blankRow = Math.floor(pieces.indexOf(null) / 3) + 1;
+      return (inversions % 2 === 0 && blankRow % 2 === 1) || (inversions % 2 === 1 && blankRow % 2 === 0);
+    }
+
+    createPuzzle();
+  </script>
+
+</body>
+
+</html>
+

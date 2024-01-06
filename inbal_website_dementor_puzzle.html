@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sliding Puzzle</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://i.pinimg.com/736x/30/71/2b/30712b4bc8832d63e65d8f2734dc077c.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    #puzzle-container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-top: 20px;
+    }
+
+    .puzzle-piece {
+      width: 100px;
+      height: 100px;
+      background-color: #fed136;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .empty-piece {
+      background-color: #1a1a1a;
+      cursor: not-allowed;
+    }
+    <!-- timeline.html -->
+
+
+   
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    nav {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+      nav {
+      background-color: #6D0805;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .timeline-event {
+      position: relative;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .event-date {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .event-description {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+ 
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#memories">Memories</a>
+    <a href="#adventures">Adventures</a>
+    <a href="#future">Future</a>
+    <a href="gallery.html">Gallery</a>
+
+  </nav>
+
+
+
+ 
+
+    
+
+
+
+<body>
+
+  
+
+   <section>
+    <h2>Magical Sliding Puzzle</h2>
+    <div id="puzzle-container"></div>
+    <div id="timer">Time: 0 seconds</div>
+  </section>
+
+  <script>
+    const puzzleContainer = document.getElementById('puzzle-container');
+    const timerElement = document.getElementById('timer');
+    let startTime;
+    let timerInterval;
+
+    function createPuzzle() {
+      const word = "DEMENTOR";
+      let pieces = word.split('');
+
+      // Randomly shuffle the letters
+      pieces.sort(() => Math.random() - 0.5);
+
+      // Insert null (blank space) at a random position
+      pieces.splice(Math.floor(Math.random() * pieces.length), 0, null);
+
+      pieces.forEach((letter, index) => {
+        const piece = document.createElement('div');
+        piece.className = `puzzle-piece ${letter === null ? 'empty-piece' : ''}`;
+        piece.innerText = letter;
+        piece.addEventListener('click', () => movePiece(letter, index));
+        puzzleContainer.appendChild(piece);
+      });
+    }
+
+    function startTimer() {
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+      puzzleContainer.removeEventListener('click', startTimer);
+    }
+
+    function updateTimer() {
+      const currentTime = Math.floor((Date.now() - startTime) / 1000);
+      timerElement.innerText = `Time: ${currentTime} second${currentTime === 1 ? '' : 's'}`;
+    }
+
+    function movePiece(letter, index) {
+      const emptyIndex = Array.from(puzzleContainer.children).findIndex(piece => piece.innerText === '');
+
+      if (canMove(index, emptyIndex)) {
+        swapPieces(index, emptyIndex);
+        if (!timerInterval) {
+          startTimer();
+        }
+        checkWin();
+      }
+    }
+
+    function swapPieces(index1, index2) {
+      const tempText = puzzleContainer.children[index1].innerText;
+      puzzleContainer.children[index1].innerText = puzzleContainer.children[index2].innerText;
+      puzzleContainer.children[index2].innerText = tempText;
+
+      puzzleContainer.children[index1].classList.toggle('empty-piece');
+      puzzleContainer.children[index2].classList.toggle('empty-piece');
+    }
+
+    function canMove(index1, index2) {
+      const row1 = Math.floor(index1 / 3);
+      const col1 = index1 % 3;
+      const row2 = Math.floor(index2 / 3);
+      const col2 = index2 % 3;
+
+      return Math.abs(row1 - row2) + Math.abs(col1 - col2) === 1;
+    }
+
+    function checkWin() {
+      const currentOrder = Array.from(puzzleContainer.children).map(piece => piece.innerText);
+      const correctOrder = [...'DEMENTOR', ''];
+
+      if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+        clearInterval(timerInterval);
+        const timeInSeconds = Math.floor((Date.now() - startTime) / 1000);
+        alert(`Congratulations! You solved the puzzle in ${timeInSeconds} second${timeInSeconds === 1 ? '' : 's'}!`);
+        puzzleContainer.innerHTML = '';
+        timerElement.innerText = 'Time: 0 seconds';
+        createPuzzle();
+      }
+    }
+
+    createPuzzle();
+    puzzleContainer.addEventListener('click', startTimer);
+  </script>
+
+</body>
+
+</html>

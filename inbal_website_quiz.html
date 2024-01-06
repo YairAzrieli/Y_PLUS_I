@@ -1,0 +1,173 @@
+<!-- puzzle_quiz.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Quiz</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://i.pinimg.com/736x/30/71/2b/30712b4bc8832d63e65d8f2734dc077c.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .quiz-question {
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .quiz-options {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+     #result-0, #result-1, #result-2 {
+    color: green; 
+       background-color: #fff;
+  }
+    
+  #points-counter {
+    color: red; /* Change to your desired color */
+  }
+    .quiz-option {
+      background-color: #fed136;
+      color: #1a1a1a;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .quiz-option:hover {
+      background-color: #ffea80;
+    }
+
+    nav {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a,
+    header a {
+      color: #fed136;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    header a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html">Welcome to Our Love Quiz</a>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#memories">Memories</a>
+    <a href="#adventures">Adventures</a>
+    <a href="#future">Future</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="wizard_section.html">Wizard Houses</a>
+    <a href="puzzle_quiz.html">Love Quiz</a>
+  </nav>
+
+  <section>
+    <h2>Love Quiz</h2>
+
+    <!-- Quiz Question 1 -->
+    <div class="quiz-question">
+      <p>What was our first date?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(0, 0)">Coffee Shop</div>
+        <div class="quiz-option" onclick="checkAnswer(0, 1)">Movie Theater</div>
+        <div class="quiz-option" onclick="checkAnswer(0, 2)">Park Picnic</div>
+      </div>
+    </div>
+    <p id="result-0"></p>
+
+    <!-- Quiz Question 2 -->
+    <div class="quiz-question">
+      <p>Where did we go on our first vacation together?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(1, 0)">Beach Resort</div>
+        <div class="quiz-option" onclick="checkAnswer(1, 1)">Mountain Cabin</div>
+        <div class="quiz-option" onclick="checkAnswer(1, 2)">City Exploration</div>
+      </div>
+    </div>
+    <p id="result-1"></p>
+
+    <!-- Quiz Question 3 -->
+    <div class="quiz-question">
+      <p>What is our favorite movie to watch together?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="checkAnswer(2, 0)">Romantic Comedy</div>
+        <div class="quiz-option" onclick="checkAnswer(2, 1)">Action/Adventure</div>
+        <div class="quiz-option" onclick="checkAnswer(2, 2)">Sci-Fi/Fantasy</div>
+      </div>
+    </div>
+    <p id="result-2"></p>
+
+    <!-- Add more quiz questions with options -->
+
+    <!-- Points Counter -->
+    <p id="points-counter">Points: 0</p>
+  </section>
+
+  <script>
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+
+    
+    function checkAnswer(questionIndex, answerIndex) {
+      const resultElement = document.getElementById(`result-${questionIndex}`);
+      const pointsCounter = document.getElementById("points-counter");
+      const answers = [
+        ["Correct! You remember our first date.", "Oops! Try again."],
+        ["Correct! That was our first vacation destination.", "Oops! Give it another shot."],
+        ["Correct! Movie time is always special with you.", "Oops! Keep trying!"]
+      ];
+
+      if (answerIndex === 0) {
+        correctAnswers++;
+      } else {
+        incorrectAnswers++;
+      }
+      
+      
+
+      resultElement.innerText = answers[questionIndex][answerIndex];
+      pointsCounter.innerText = `Points: ${correctAnswers - incorrectAnswers}`;
+    }
+  </script>
+
+</body>
+
+</html>

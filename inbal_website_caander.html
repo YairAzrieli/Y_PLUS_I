@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magical Moments Calendar</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://i.pinimg.com/736x/30/71/2b/30712b4bc8832d63e65d8f2734dc077c.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .calendar {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .month {
+      flex: 0 0 30%;
+      margin: 10px;
+      background-color: #1a1a1a;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .month h2 {
+      color: #fed136;
+    }
+
+    .day {
+      background-color: #fed136;
+      color: #1a1a1a;
+      font-weight: bold;
+      padding: 5px;
+      margin: 5px;
+      border-radius: 4px;
+    }
+
+    .photo {
+      max-width: 100%;
+      height: auto;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+
+       nav {
+      background-color: #6D0805;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+
+    nav a:hover,
+    header a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html">Welcome to Our Magical Journey</a>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#memories">Memories</a>
+    <a href="#adventures">Adventures</a>
+    <a href="#future">Future</a>
+   
+  </nav>
+
+  <section>
+    <h2>Magical Moments Calendar</h2>
+
+    <div class="calendar">
+      <!-- Month 1 -->
+      <div class="month">
+        <h2>January</h2>
+        <div class="day">1</div>
+        <img class="photo" src="https://i.pinimg.com/736x/30/71/2b/30712b4bc8832d63e65d8f2734dc077c.jpg" alt="Photo for January 1">
+        <div class="day">15</div>
+        <img class="photo" src="photo_url_jan_15.jpg" alt="Photo for January 15">
+        <!-- Add more days with events -->
+      </div>
+
+      <!-- Month 2 -->
+      <div class="month">
+        <h2>February</h2>
+        <div class="day">14</div>
+        <img class="photo" src="photo_url_feb_14.jpg" alt="Photo for February 14">
+        <!-- Add more days with events -->
+      </div>
+
+      <!-- Month 3 -->
+      <div class="month">
+        <h2>March</h2>
+        <div class="day">8</div>
+        <img class="photo" src="photo_url_mar_8.jpg" alt="Photo for March 8">
+        <!-- Add more days with events -->
+      </div>
+    </div>
+
+  </section>
+
+</body>
+
+</html>
