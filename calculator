@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון ממוצע ציונים</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 5%; /* Responsive padding based on screen size */
+  }
+  .grade-calculator {
+    width: 100%; /* Full width */
+    max-width: 600px; /* Maximum width */
+    margin: 0 auto;
+    background: #fff;
+    padding: 5%; /* Responsive padding */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .grade-calculator h1 {
+    text-align: center;
+    color: #333;
+  }
+  .grade-calculator form {
+    display: flex;
+    flex-direction: column;
+  }
+  .grade-calculator input[type=number] {
+    margin-bottom: 1em; /* Responsive spacing */
+    padding: 1em; /* Responsive padding */
+    font-size: 1em; /* Relative font size */
+    border: 1px solid #ddd;
+    width: calc(100% - 2em); /* Full width minus padding */
+  }
+  .grade-calculator button {
+    padding: 1em;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 1em;
+    width: 100%; /* Full width */
+  }
+  form button[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+  #clearData {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  #newAverageResult {
+    margin-top: 2em; /* Responsive spacing */
+    text-align: center;
+  }
+  #newAverageResult h2 {
+    margin: 0;
+    color: #333;
+  }
+  #newAverage {
+    font-size: 2em; /* Larger font size for the result */
+    color: #4CAF50;
+  }
+
+  /* Media query for small screens such as smartphones */
+  @media (max-width: 600px) {
+    .grade-calculator {
+      padding: 3%; /* Smaller padding for smaller screens */
+    }
+    .grade-calculator input[type=number], .grade-calculator button {
+      font-size: 1.5em; /* Larger font size for better readability on small screens */
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="grade-calculator">
+  <h1>ממוצע ציונים עם עוברים בינאריים</h1>
+  <form id="gradeForm">
+    <label for="currentAverage">ממוצע כללי:</label>
+    <input type="number" id="currentAverage" step="0.01" placeholder="ממוצע כללי">
+
+    <label for="totalCredits">סה"כ נקודות זכות:</label>
+    <input type="number" id="totalCredits" placeholder="נקודות זכות">
+
+    <div id="coursesToRemove">
+      <!-- Course input fields will be added here by the script below -->
+    </div>
+
+    <button type="submit">חשב </button>
+    <button type="button" id="clearData">נקה נתונים</button>
+  </form>
+
+  <div id="newAverageResult" style="display:none;">
+    <h2>הממוצע החדש</h2>
+    <div id="newAverage">--</div>
+  </div>
+</div>
+
+<script>
+// JavaScript to add course input fields and handle form submission
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('gradeForm');
+  const coursesDiv = document.getElementById('coursesToRemove');
+
+  // Function to add a new course input field
+  function addCourseInput(index) {
+    const courseFieldset = document.createElement('fieldset');
+    courseFieldset.innerHTML = `
+      <label for="courseGrade${index}">ציון קורס:</label>
+      <input type="number" id="courseGrade${index}" step="0.01" placeholder="ציון קורס">
+      <label for="courseCredits${index}">נקודות קורס:</label>
+      <input type="number" id="courseCredits${index}" placeholder="נקודות קורס">
+    `;
+    coursesDiv.appendChild(courseFieldset);
+  }
+
+  // Add initial 5 course input fields
+  for (let i = 1; i <= 5; i++) {
+    addCourseInput(i);
+  }
+
+  // Calculate the new average when the form is submitted
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    let overallAverage = parseFloat(document.getElementById('currentAverage').value) || 0;
+    let totalCredits = parseFloat(document.getElementById('totalCredits').value) || 0;
+    let totalGradePoints = overallAverage * totalCredits;
+
+    for (let i = 1; i <= 5; i++) {
+      let courseGradeInput = document.getElementById(`courseGrade${i}`);
+      let courseCreditsInput = document.getElementById(`courseCredits${i}`);
+      let courseGrade = courseGradeInput && courseGradeInput.value ? parseFloat(courseGradeInput.value) : null;
+      let courseCredits = courseCreditsInput && courseCreditsInput.value ? parseFloat(courseCreditsInput.value) : null;
+
+      // Only subtract if both grade and credits are provided
+      if (courseGrade !== null && courseCredits !== null) {
+        totalGradePoints -= (courseGrade * courseCredits);
+        totalCredits -= courseCredits;
+      }
+    }
+
+    let newAverage = totalCredits > 0 ? totalGradePoints / totalCredits : 0;
+    document.getElementById('newAverage').textContent = newAverage.toFixed(2);
+    document.getElementById('newAverageResult').style.display = 'block';
+  });
+
+  // Clear the form
+  document.getElementById('clearData').addEventListener('click', function() {
+    form.reset();
+    document.getElementById('newAverageResult').style.display = 'none';
+  });
+});
+</script>
+
+</body>
+</html>
