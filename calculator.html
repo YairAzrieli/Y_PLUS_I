@@ -80,11 +80,14 @@
 <div class="grade-calculator">
   <h1>ממוצע ציונים עם עוברים בינאריים</h1>
   <form id="gradeForm">
+      
+<h3>הכניסו את הממוצע ואת הנק"ז הכולל</h3>
     <label for="currentAverage">ממוצע כללי:</label>
     <input type="number" id="currentAverage" step="0.01" placeholder="ממוצע כללי">
 
     <label for="totalCredits">סה"כ נקודות זכות:</label>
-    <input type="number" id="totalCredits" placeholder="נקודות זכות">
+   <input type="number" id="totalCredits" step="0.1" placeholder="נקודות זכות">
+<h3>הכניסו את הקורסים שברצונכם לשים עובר בינארי עליהם</h3>
 
     <div id="coursesToRemove">
       <!-- Course input fields will be added here by the script below -->
@@ -107,16 +110,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const coursesDiv = document.getElementById('coursesToRemove');
 
   // Function to add a new course input field
-  function addCourseInput(index) {
-    const courseFieldset = document.createElement('fieldset');
-    courseFieldset.innerHTML = `
-      <label for="courseGrade${index}">ציון קורס:</label>
-      <input type="number" id="courseGrade${index}" step="0.01" placeholder="ציון קורס">
-      <label for="courseCredits${index}">נקודות קורס:</label>
-      <input type="number" id="courseCredits${index}" placeholder="נקודות קורס">
-    `;
-    coursesDiv.appendChild(courseFieldset);
-  }
+function addCourseInput(index) {
+  const courseFieldset = document.createElement('fieldset');
+  courseFieldset.innerHTML = `
+    <label for="courseGrade${index}">ציון קורס:</label>
+    <input type="number" id="courseGrade${index}" step="0.01" placeholder="ציון קורס">
+    <label for="courseCredits${index}">נקודות זכות בקורס:</label>
+    <input type="number" id="courseCredits${index}" step="0.1" placeholder="נקודות זכות">`;
+  coursesDiv.appendChild(courseFieldset);
+}
+
 
   // Add initial 5 course input fields
   for (let i = 1; i <= 5; i++) {
