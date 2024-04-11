@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון ציון חדש</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 5%;
+  }
+  .grade-calculator {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 5%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .grade-calculator h1, #newAverageResult h2 {
+    text-align: center;
+    color: #333;
+  }
+  .grade-calculator form {
+    display: flex;
+    flex-direction: column;
+  }
+  .grade-calculator input[type=number] {
+    margin-bottom: 1em;
+    padding: 1em;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    width: calc(100% - 2em);
+  }
+  .grade-calculator button {
+    padding: 1em;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 1em;
+    width: 100%;
+  }
+  form button[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+  #clearData {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  #newAverageResult {
+    margin-top: 2em;
+    text-align: center;
+  }
+  #newAverage {
+    font-size: 2em;
+    color: #4CAF50;
+  }
+  .course-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grade-calculator">
+  <h1>מחשבון הוספת ציון חדש שלא כלול בממוצע</h1>
+  <form id="gradeForm">
+    <label for="currentAverage">ממוצע כללי:</label>
+    <input type="number" id="currentAverage" step="0.01" placeholder="ממוצע כללי">
+    <label for="totalCredits">סה"כ נקודות זכות (מבלי הקורסים החדשים):</label>
+    <input type="number" id="totalCredits" step="0.1" placeholder="נקודות זכות ">
+    <h3>הכניסו את הקורסים שאותם תרצו להוסיף לממוצע</h3>
+    <div id="courses">
+      <!-- Course input fields will be dynamically added here -->
+    </div>
+    <button type="submit">חשב</button>
+    <button type="button" id="clearData">נקה נתונים</button>
+  </form>
+  <div id="newAverageResult" style="display:none;">
+    <h2>הממוצע החדש</h2>
+    <div id="newAverage">--</div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const coursesDiv = document.getElementById('courses');
+
+  function addCourseInput(index) {
+    const courseDiv = document.createElement('div');
+    courseDiv.className = 'course-box';
+    courseDiv.innerHTML = `
+      <label for="courseScore${index}">ציון קורס:</label>
+      <input type="number" id="courseScore${index}" step="0.01" placeholder="ציון קורס">
+      <label for="courseCredits${index}">נקודות זכות בקורס:</label>
+      <input type="number" id="courseCredits${index}" step="0.1" placeholder="נקודות זכות">
+    `;
+    coursesDiv.appendChild(courseDiv);
+  }
+
+  for (let i = 1; i <= 3; i++) {
+    addCourseInput(i);
+  }
+
+  const form = document.getElementById('gradeForm');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const overallAverage = parseFloat(document.getElementById('currentAverage').value) || 0;
+    let totalCredits = parseFloat(document.getElementById('totalCredits').value) || 0;
+    let totalPoints = overallAverage * totalCredits;
+
+    for (let i = 1; i <= 3; i++) {
+      const courseScore = parseFloat(document.getElementById(`courseScore${i}`).value) || 0;
+      const courseCredits = parseFloat(document.getElementById(`courseCredits${i}`).value) || 0;
+
+      totalPoints += courseScore * courseCredits;
+      totalCredits += courseCredits;
+    }
+
+    const newAverage = totalCredits > 0 ? totalPoints / totalCredits : 0;
+    document.getElementById('newAverage').textContent = newAverage.toFixed(2);
+    document.getElementById('newAverageResult').style.display = 'block';
+  });
+
+  document.getElementById('clearData').addEventListener('click', function() {
+    form.reset();
+    document.getElementById('newAverageResult').style.display = 'none';
+  });
+});
+</script>
+
+</body>
+</html>
