@@ -128,20 +128,20 @@
     <h1>משחק טריוויה - מהגרים דיגיטליים</h1>
 
     <nav>
-         <ul>
-            <li><a href="https://yairazrieli.github.io/Y_PLUS_I/Digital_immigrants.html">דף הבית</a></li>
-            <li><a href="https://yairazrieli.github.io/Y_PLUS_I/Digital_immigrants_game_lobby.html">המשחק</a></li>
-            <li><a href="https://yairazrieli.github.io/Y_PLUS_I/Digital_immigrants_about.html">אודות</a></li>
+        <ul>
+            <li><a href="#">דף הבית</a></li>
+            <li><a href="#">המשחק</a></li>
+            <li><a href="#">אודות</a></li>
         </ul>
     </nav>
 
     <div class="question-box">
-        <div id="question" class="question">שאלה תוצג כאן</div>
+        <div id="question" class="question"></div>
         <div class="answers">
-            <button onclick="checkAnswer(0)">תשובה א'</button>
-            <button onclick="checkAnswer(1)">תשובה ב'</button>
-            <button onclick="checkAnswer(2)">תשובה ג'</button>
-            <button onclick="checkAnswer(3)">תשובה ד'</button>
+            <button onclick="checkAnswer(0)" id="answer0"></button>
+            <button onclick="checkAnswer(1)" id="answer1"></button>
+            <button onclick="checkAnswer(2)" id="answer2"></button>
+            <button onclick="checkAnswer(3)" id="answer3"></button>
         </div>
         <button id="next-btn" onclick="nextQuestion()">שאלה הבאה</button>
     </div>
@@ -298,7 +298,9 @@
         let highScore = localStorage.getItem("highScore") || 0;
 
         // הצגת השאלה הראשונה
-        window.onload = displayQuestion;
+        window.onload = function() {
+            displayQuestion();
+        };
 
         // הצגת השאלה הנוכחית
         function displayQuestion() {
@@ -353,7 +355,7 @@
                 button.disabled = true;
             });
 
-            document.getElementById("score").innerText = ניקוד: ${score};
+            document.getElementById("score").innerText = `ניקוד: ${score}`;
             document.getElementById("next-btn").style.display = "block";
         }
 
@@ -368,13 +370,13 @@
             document.getElementById("question").innerText = "סיימת את המשחק!";
             document.querySelector(".answers").style.display = "none";
             document.getElementById("next-btn").style.display = "none";
-            document.getElementById("result").innerText = הניקוד הסופי שלך: ${score};
+            document.getElementById("result").innerText = `הניקוד הסופי שלך: ${score}`;
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem("highScore", highScore);
                 document.getElementById("result").innerText += " - שיא חדש!";
             } else {
-                document.getElementById("result").innerText += \nהשיא האישי שלך: ${highScore};
+                document.getElementById("result").innerText += `\nהשיא האישי שלך: ${highScore}`;
             }
         }
     </script>
