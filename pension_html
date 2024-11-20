@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>מחשבון פרישה אינטראקטיבי</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .input-section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-section {
+            flex: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            direction: ltr;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:active {
+            animation: buttonPulse 0.3s ease;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 4px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .result.show {
+            animation: resultSlideIn 0.5s ease forwards;
+        }
+        .money {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .advanced-options {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .animation-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .animation-wrapper.show {
+            opacity: 1;
+        }
+        #trophyAnimation {
+            z-index: 1001;
+        }
+        #moneyRainAnimation {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: none;
+        }
+        #piggyAnimation {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            opacity: 1;
+        }
+        @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes resultSlideIn {
+            from { 
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .chart-section {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animation-wrapper" id="trophyAnimation"></div>
+    <div class="animation-wrapper" id="moneyRainAnimation"></div>
+    <div id="piggyAnimation"></div>
+
+    <div class="container">
+        <div class="input-section">
+            <h2>מחשבון פרישה</h2>
+            <div class="form-group">
+                <label for="currentAge">גיל נוכחי</label>
+                <input type="number" id="currentAge" min="18" max="100" value="30">
+                <div class="error" id="currentAgeError">גיל לא תקין</div>
+            </div>
+            <div class="form-group">
+                <label for="retirementAge">גיל פרישה מתוכנן</label>
+                <input type="number" id="retirementAge" min="18" max="100" value="67">
+                <div class="error" id="retirementAgeError">גיל פרישה חייב להיות גדול מהגיל הנוכחי</div>
+            </div>
+            <div class="form-group">
+                <label for="monthlyNeeded">סכום חודשי רצוי בפרישה</label>
+                <input type="number" id="monthlyNeeded" min="1000" value="15000">
+                <div class="error" id="monthlyNeededError">נא להזין סכום תקין</div>
+            </div>
+            <div class="advanced-options">
+                <div class="form-group">
+                    <label for="interestRate">ריבית שנתית (%)</label>
+                    <input type="number" id="interestRate" min="1" max="20" value="8" step="0.1">
+                    <div class="error" id="interestRateError">ריבית חייבת להיות בין 1% ל-20%</div>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawalRate">אחוז משיכה שנתי (%)</label>
+                    <input type="number" id="withdrawalRate" min="0.1" max="10" value="3" step="0.1">
+                    <div class="error" id="withdrawalRateError">אחוז משיכה חייב להיות בין 0.1% ל-10%</div>
+                </div>
+            </div>
+            <button onclick="calculate()">חשב</button>
+            <div class="result" id="result">
+                <div>נדרש להפקיד מדי חודש:</div>
+                <div class="money" id="monthlyDeposit"></div>
+                <div id="totalSavings" style="margin-top: 10px; font-size: 14px;"></div>
+            </div>
+        </div>
+        <div class="chart-section">
+            <canvas id="savingsChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+        let lastValidInputs = {
+            currentAge: 30,
+            retirementAge: 67,
+            monthlyNeeded: 15000,
+            interestRate: 8,
+            withdrawalRate: 3
+        };
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('he-IL', { 
+                style: 'currency', 
+                currency: 'ILS',
+                maximumFractionDigits: 0 
+            }).format(amount);
+        }
+
+        function validateInputs() {
+            const currentAge = parseInt(document.getElementById('currentAge').value);
+            const retirementAge = parseInt(document.getElementById('retirementAge').value);
+            const monthlyNeeded = parseInt(document.getElementById('monthlyNeeded').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const withdrawalRate = parseFloat(document.getElementById('withdrawalRate').value);
+
+            let isValid = true;
+
+            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+
+            if (isNaN(currentAge) || currentAge < 18 || currentAge > 100) {
+                document.getElementById('currentAgeError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isNaN(retirementAge) || retirementAge <= currentAge || retirementAge > 100) {
+                document.getElementById('retirementAgeError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isNaN(monthlyNeeded) || monthlyNeeded < 1000) {
+                document.getElementById('monthlyNeededError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isNaN(interestRate) || interestRate < 1 || interestRate > 20) {
+                document.getElementById('interestRateError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isNaN(withdrawalRate) || withdrawalRate < 0.1 || withdrawalRate > 10) {
+                document.getElementById('withdrawalRateError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                lastValidInputs = {
+                    currentAge,
+                    retirementAge,
+                    monthlyNeeded,
+                    interestRate,
+                    withdrawalRate
+                };
+                return true;
+            }
+
+            return false;
+        }
+
+        function calculateMonthlyPayment(currentAge, retirementAge, monthlyNeeded, interestRate, withdrawalRate) {
+            const years = retirementAge - currentAge;
+            const monthlyRate = interestRate / 100 / 12;
+            const totalNeeded = (monthlyNeeded * 12) / (withdrawalRate / 100);
+            
+            const monthlyPayment = totalNeeded / 
+                (Math.pow(1 + monthlyRate, years * 12) * (1 / monthlyRate) - 
+                (1 / monthlyRate));
+            
+            return Math.ceil(monthlyPayment);
+        }
+
+        function createSavingsData(currentAge, retirementAge, monthlyPayment, interestRate) {
+            const years = retirementAge - currentAge;
+            const monthlyRate = interestRate / 100 / 12;
+            const data = [];
+            
+            let balance = 0;
+            let totalDeposits = 0;
+
+            for (let year = 0; year <= years; year++) {
+                balance = 0;
+                totalDeposits = monthlyPayment * 12 * year;
+
+                for (let month = 0; month < year * 12; month++) {
+                    balance = (balance + monthlyPayment) * (1 + monthlyRate);
+                }
+
+                data.push({
+                    year: currentAge + year,
+                    deposits: totalDeposits,
+                    interest: Math.max(0, balance - totalDeposits)
+                });
+            }
+
+            return data;
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.year),
+                    datasets: [
+                        {
+                            label: 'סך הפקדות',
+                            data: data.map(d => d.deposits),
+                            borderColor: 'rgb(54, 162, 235)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            fill: true
+                        },
+                        {
+                            label: 'ריבית שהצטברה',
+                            data: data.map(d => d.interest),
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadAnimation(containerId, path, options = {}) {
+            return lottie.loadAnimation({
+                container: document.getElementById(containerId),
+                renderer: 'svg',
+                loop: options.loop ?? false,
+                autoplay: options.autoplay ?? true,
+                path: path,
+            });
+        }
+
+        function playSuccessAnimations() {
+            const trophyWrapper = document.getElementById('trophyAnimation');
+            trophyWrapper.classList.add('show');
+            const trophyAnim = loadAnimation('trophyAnimation', 
+                'https://assets5.lottiefiles.com/packages/lf20_yesesxau.json');
+            
+            const moneyWrapper = document.getElementById('moneyRainAnimation');
+            moneyWrapper.classList.add('show');
+            const moneyAnim = loadAnimation('moneyRainAnimation', 
+                'https://assets2.lottiefiles.com/packages/lf20_tmtxqnns.json');
+
+            trophyAnim.addEventListener('complete', () => {
+                setTimeout(() => {
+                    trophyWrapper.classList.remove('show');
+                }, 500);
+            });
+
+            moneyAnim.addEventListener('complete', () => {
+                setTimeout(() => {
+                    moneyWrapper.classList.remove('show');
+                }, 500);
+            });
+        }
+
+        loadAnimation('piggyAnimation', 
+            'https://assets9.lottiefiles.com/packages/lf20_bdjtwn1f.json', 
+            { loop: true });
+
+        function calculate() {
+            if (!validateInputs()) {
+                return;
+            }
+
+            const {currentAge, retirementAge, monthlyNeeded, interestRate, withdrawalRate} = lastValidInputs;
+            const monthlyPayment = calculateMonthlyPayment(
+                currentAge, 
+                retirementAge, 
+                monthlyNeeded, 
+                interestRate, 
+                withdrawalRate
+            );
+
+            const savingsData = createSavingsData(
+                currentAge,
+                retirementAge,
+                monthlyPayment,
+                interestRate
+            );
+
+            const finalBalance = savingsData[savingsData.length - 1].deposits + 
+                               savingsData[savingsData.length - 1].interest;
+
+            document.getElementById('monthlyDeposit').textContent = formatCurrency(monthlyPayment);
+            document.getElementById('totalSavings').textContent = 
+                `סך החיסכון בגיל ${retirementAge}: ${formatCurrency(finalBalance)}`;
+            
+            updateChart(savingsData);
+            showResult();
+            playSuccessAnimations();
+        }
+
+        function showResult() {
+            const result = document.getElementById('result');
+            result.classList.add('show');
+        }
+
+        // הרצה ראשונית בטעינת הדף
+        calculate();
+
+        // הוספת מאזיני אירועים לכל השדות
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('change', calculate);
+            input.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    calculate();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
